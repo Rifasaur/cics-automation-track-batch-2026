@@ -79,7 +79,8 @@ export default function ScheduleForStudents() {
 			);
 			// TODO(backend): Persist staff scheduling metadata and audit logs
 			// in a dedicated endpoint for "schedule-on-behalf" actions.
-		} catch {
+		} catch (error) {
+			console.error('Failed to create a staff-scheduled reservation.', error);
 			setStatusMessage('Unable to create the reservation right now.');
 		} finally {
 			setIsSubmitting(false);

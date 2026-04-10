@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getAllReservations } from '../../data/services/reservationService';
 
 export default function PendingRequests() {
+	const TABLE_COLUMN_COUNT = 5;
 	const [pendingReservations, setPendingReservations] = useState([]);
 	const [statusMessage, setStatusMessage] = useState('');
 
@@ -77,7 +78,7 @@ export default function PendingRequests() {
 					))}
 					{pendingReservations.length === 0 ? (
 						<tr>
-							<td colSpan={5}>No pending requests right now.</td>
+							<td colSpan={TABLE_COLUMN_COUNT}>No pending requests right now.</td>
 						</tr>
 					) : null}
 				</tbody>
