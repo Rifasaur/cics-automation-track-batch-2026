@@ -44,7 +44,6 @@ export default function App() {
 
             <Route path="/staff" element={<StaffLayout />}>
                 <Route index element={<PendingRequests />} />
-                <Route path="pending-requests" element={<PendingRequests />} />
                 <Route path="schedule-for-students" element={<ScheduleForStudents />} />
             </Route>
 
