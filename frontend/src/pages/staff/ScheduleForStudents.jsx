@@ -3,6 +3,7 @@ import { getCurrentUser, getUsers } from '../../data/services/authService';
 import { createReservation } from '../../data/services/reservationService';
 import { ROOMS, TIME_SLOTS } from '../../data/mock/mockData';
 import PageHeader from '../../shared/components/PageHeader';
+import './ScheduleForStudents.css';
 
 export default function ScheduleForStudents() {
 	const [staffUser, setStaffUser] = useState(null);
@@ -91,16 +92,17 @@ export default function ScheduleForStudents() {
 	}
 
 	return (
-		<section style={{ padding: '2rem' }}>
+		<section className="schedule-students-page">
 			<PageHeader
 				title="Schedule for Students"
 				subtitle="Create a reservation on behalf of students who request scheduling help."
 			/>
 
-			<form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem', marginTop: '1rem', maxWidth: '480px' }}>
-				<label>
-					<span>Student</span>
-					<select
+			<div className="schedule-students__surface">
+				<form className="schedule-students__form" onSubmit={handleSubmit}>
+					<label className="schedule-students__field schedule-students__field--full">
+						<span>Student</span>
+						<select
 						value={formValues.studentId}
 						onChange={(event) => updateField('studentId', event.target.value)}
 						required
@@ -110,22 +112,22 @@ export default function ScheduleForStudents() {
 								{student.name} ({student.studentId})
 							</option>
 						))}
-					</select>
-				</label>
+						</select>
+					</label>
 
-				<label>
-					<span>Date</span>
-					<input
+					<label className="schedule-students__field">
+						<span>Date</span>
+						<input
 						type="date"
 						value={formValues.date}
 						onChange={(event) => updateField('date', event.target.value)}
 						required
 					/>
-				</label>
+					</label>
 
-				<label>
-					<span>Time Slot</span>
-					<select
+					<label className="schedule-students__field">
+						<span>Time Slot</span>
+						<select
 						value={formValues.timeSlot}
 						onChange={(event) => updateField('timeSlot', event.target.value)}
 						required
@@ -135,45 +137,33 @@ export default function ScheduleForStudents() {
 								{slot.start} - {slot.end}
 							</option>
 						))}
-					</select>
-				</label>
+						</select>
+					</label>
 
-				<label>
-					<span>Room</span>
-					<select
-						value={formValues.roomId}
-						onChange={(event) => updateField('roomId', event.target.value)}
-						required
-					>
-						{ROOMS.map((room) => (
-							<option key={room.id} value={room.id}>
-								{room.name}
-							</option>
-						))}
-					</select>
-				</label>
-
-				<label>
-					<span>Notes</span>
-					<textarea
+					<label className="schedule-students__field schedule-students__field--full">
+						<span>Notes</span>
+						<textarea
 						value={formValues.notes}
 						onChange={(event) => updateField('notes', event.target.value)}
 						rows={4}
 						placeholder="Optional context for the student's request"
 					/>
-				</label>
+					</label>
 
-				<button type="submit" disabled={isSubmitting}>
-					{isSubmitting ? 'Saving...' : 'Create Reservation'}
-				</button>
-			</form>
+					<div className="schedule-students__actions schedule-students__field--full">
+						<button type="submit" className="schedule-students__submit" disabled={isSubmitting}>
+							{isSubmitting ? 'Saving...' : 'Create Reservation'}
+						</button>
+					</div>
+				</form>
+			</div>
 
 			{selectedStudent ? (
-				<p style={{ marginTop: '1rem' }}>
+				<p className="schedule-students__status">
 					Scheduling for: <strong>{selectedStudent.name}</strong>
 				</p>
 			) : null}
-			{statusMessage ? <p style={{ marginTop: '0.75rem' }}>{statusMessage}</p> : null}
+			{statusMessage ? <p className="schedule-students__message">{statusMessage}</p> : null}
 		</section>
 	);
 }

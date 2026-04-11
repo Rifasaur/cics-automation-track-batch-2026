@@ -115,8 +115,30 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 			>
 				<form className="reserve-modal-form" onSubmit={handleSubmit}>
 					<div className="reserve-modal-form__summary">
-						<p>Booking for: <strong>{currentUser?.name ?? 'Current user'}</strong></p>
-						<p>Role: <strong>{role}</strong></p>
+                        <div className="booking-rules" padding="lg" elevated>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, margin: '0 0 0.5rem 0' }}>Booking Rules</h3>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                                <div>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#595959', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.5rem' }}>Reservation Hours</span>
+                                    <span style={{ fontSize: '1rem', fontWeight: 600, color: '#1a1a1a' }}>08:00 AM - 05:00 PM</span>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#595959', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.5rem' }}>Max Stay</span>
+                                    <span style={{ fontSize: '1rem', fontWeight: 600, color: '#1a1a1a' }}>3 hours</span>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#595959', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.5rem' }}>Grace Period</span>
+                                    <span style={{ fontSize: '1rem', fontWeight: 600, color: '#1a1a1a' }}>15 minutes</span>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#595959', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.5rem' }}>Occupancy Length</span>
+                                    <span style={{ fontSize: '1rem', fontWeight: 600, color: '#1a1a1a' }}>1 hour (Hourly Basis)</span>
+                                </div>
+                            </div>
+                        </div>
 					</div>
 
 					<label className="reserve-modal-field">

@@ -31,25 +31,23 @@ export default function CapacityMap() {
 		<div className="capacity-map">
 			<div className="capacity-map__header">
 				<h3 className="capacity-map__title">Live Capacity Map</h3>
-				<div className="capacity-map__meta">
-					<span className="capacity-map__status-badge">ACTIVE SESSION</span>
-				</div>
+                
+                <div className="capacity-map__legend">
+                    <div className="capacity-map__legend-item">
+                        <div className="capacity-map__legend-dot capacity-map__legend-dot--vacant" />
+                        <span>AVAILABLE</span>
+                    </div>
+                    <div className="capacity-map__legend-item">
+                        <div className="capacity-map__legend-dot capacity-map__legend-dot--reserved" />
+                        <span>RESERVED</span>
+                    </div>
+                    <div className="capacity-map__legend-item">
+                        <div className="capacity-map__legend-dot capacity-map__legend-dot--occupied" />
+                        <span>FULL</span>
+                    </div>
+                </div>
 			</div>
 
-			<div className="capacity-map__legend">
-				<div className="capacity-map__legend-item">
-					<div className="capacity-map__legend-dot capacity-map__legend-dot--vacant" />
-					<span>AVAILABLE</span>
-				</div>
-				<div className="capacity-map__legend-item">
-					<div className="capacity-map__legend-dot capacity-map__legend-dot--reserved" />
-					<span>RESERVED</span>
-				</div>
-				<div className="capacity-map__legend-item">
-					<div className="capacity-map__legend-dot capacity-map__legend-dot--occupied" />
-					<span>FULL</span>
-				</div>
-			</div>
 
 			<div className="capacity-map__content">
 				<div className="capacity-map__grid">

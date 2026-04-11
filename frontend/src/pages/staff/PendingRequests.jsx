@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getAllReservations } from '../../data/services/reservationService';
 import PageHeader from '../../shared/components/PageHeader';
+import '../../features/reservations/components/ReservationsTable.css';
+import './PendingRequests.css';
 
 export default function PendingRequests() {
 	const tableHeaders = ['Request ID', 'Student', 'Date', 'Time Slot(s)', 'Actions'];
@@ -34,56 +36,87 @@ export default function PendingRequests() {
 	}
 
 	return (
-		<section style={{ padding: '2rem' }}>
+		<section style={{ padding: '2rem', display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
 			<PageHeader
 				title="Pending Requests"
-				subtitle="Approve, decline, or reschedule requests submitted by students."
+				subtitle="Approve or decline requests submitted by students."
 			/>
-			{statusMessage ? <p>{statusMessage}</p> : null}
-			<table>
-				<thead>
-					<tr>
-						{tableHeaders.map((header) => (
-							<th key={header}>{header}</th>
-						))}
-					</tr>
-				</thead>
-				<tbody>
-					{pendingReservations.map((reservation) => (
-						<tr key={reservation.id}>
-							<td>{reservation.id}</td>
-							<td>{reservation.userName}</td>
-							<td>{reservation.date}</td>
-							<td>{reservation.slotIds.join(', ')}</td>
-							<td style={{ display: 'flex', gap: '0.5rem' }}>
-								<button
-									type="button"
-									onClick={() => handleAction('Approve', reservation.id)}
-								>
-									Approve
-								</button>
-								<button
-									type="button"
-									onClick={() => handleAction('Decline', reservation.id)}
-								>
-									Decline
-								</button>
-								<button
-									type="button"
-									onClick={() => handleAction('Reschedule', reservation.id)}
-								>
-									Reschedule
-								</button>
-							</td>
-						</tr>
-					))}
-					{pendingReservations.length === 0 ? (
-						<tr>
-							<td colSpan={tableHeaders.length}>No pending requests right now.</td>
-						</tr>
-					) : null}
-				</tbody>
-			</table>
+			<div className="reservations-table">
+				<div className="reservations-table__header">
+					<div>
+						<div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
+							Pending Queue
+						</div>
+						<div style={{ marginTop: '0.35rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+							{statusMessage || 'Review, approve, or decline requests submitted by students.'}
+						</div>
+					</div>
+					<div className="reservations-table__controls">
+						<div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+							{pendingReservations.length} request{pendingReservations.length === 1 ? '' : 's'} pending
+						</div>
+					</div>
+				</div>
+
+				<div className="reservations-table__wrapper">
+					<table className="reservations-table__table">
+						<thead>
+							<tr className="table-header-row">
+								{tableHeaders.map((header) => (
+									<th key={header} className="table-header-cell">
+										{header.toUpperCase()}
+									</th>
+								))}
+							</tr>
+						</thead>
+						<tbody>
+							{pendingReservations.map((reservation) => (
+								<tr key={reservation.id} className="table-body-row">
+									<td className="table-cell">
+										<div className="user-name">{reservation.id}</div>
+									</td>
+									<td className="table-cell">
+										<div className="user-name">{reservation.userName}</div>
+									</td>
+									<td className="table-cell">
+										<div className="date">{reservation.date}</div>
+									</td>
+									<td className="table-cell">
+										<div className="time">{reservation.slotIds.join(', ')}</div>
+									</td>
+									<td className="table-cell">
+										<div className="pending-requests__actions">
+											<button type="button" className="pending-requests__action-btn" onClick={() => handleAction('Approve', reservation.id)}>
+												Approve
+											</button>
+											<button type="button" className="pending-requests__action-btn" onClick={() => handleAction('Decline', reservation.id)}>
+												Decline
+											</button>
+										</div>
+									</td>
+								</tr>
+							))}
+							{pendingReservations.length === 0 ? (
+								<tr className="table-body-row">
+									<td className="table-cell" colSpan={tableHeaders.length}>
+										No pending requests right now.
+									</td>
+								</tr>
+							) : null}
+						</tbody>
+					</table>
+				</div>
+
+				<div className="reservations-table__footer">
+					<div className="pagination-info">
+						Displaying {pendingReservations.length} pending request{pendingReservations.length === 1 ? '' : 's'}
+					</div>
+					<div className="pagination-controls" aria-hidden="true">
+						<span className="pagination-btn" style={{ opacity: 0.35 }}>‹</span>
+						<span className="pagination-btn">›</span>
+					</div>
+				</div>
+			</div>
 		</section>
 	);
 }

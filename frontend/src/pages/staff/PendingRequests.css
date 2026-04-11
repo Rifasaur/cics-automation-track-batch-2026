@@ -1,0 +1,26 @@
+.pending-requests__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.pending-requests__action-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.45rem 0.75rem;
+	border: 1px solid color-mix(in oklab, var(--primary-5) 18%, var(--border-subtle) 82%);
+	border-radius: var(--radius-md);
+	background: color-mix(in oklab, var(--primary-5) 7%, var(--bg-elevated) 93%);
+	color: var(--text-primary);
+	font-size: 0.85rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.pending-requests__action-btn:hover {
+	border-color: var(--primary-5);
+	background: color-mix(in oklab, var(--primary-5) 12%, var(--bg-elevated) 88%);
+	transform: translateY(-1px);
+}
