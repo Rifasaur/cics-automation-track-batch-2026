@@ -7,6 +7,12 @@
   padding: 1rem;
   background: rgba(20, 10, 10, 0.52);
   backdrop-filter: blur(6px);
+  animation: ui-modal-backdrop-in 180ms ease-out;
+  will-change: opacity;
+}
+
+.ui-modal__backdrop--closing {
+  animation: ui-modal-backdrop-out 180ms ease-in forwards;
 }
 
 .ui-modal {
@@ -21,6 +27,13 @@
   overflow: hidden;
   position: relative;
   z-index: 2001;
+  transform-origin: center;
+  animation: ui-modal-dialog-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.ui-modal--closing {
+  animation: ui-modal-dialog-out 180ms ease-in forwards;
 }
 
 .ui-modal__header {
@@ -53,4 +66,57 @@
 .ui-modal__body {
   padding: 1.1rem;
   overflow-y: auto;
+}
+
+@keyframes ui-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-modal-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ui-modal-backdrop-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ui-modal-dialog-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-modal__backdrop,
+  .ui-modal,
+  .ui-modal__backdrop--closing,
+  .ui-modal--closing {
+    animation: none;
+  }
 }

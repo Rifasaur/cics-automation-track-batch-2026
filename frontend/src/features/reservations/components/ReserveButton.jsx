@@ -2,10 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../shared/components/Button';
 import Modal from '../../../shared/components/Modal';
-import Tabs from '../../../shared/components/Tabs';
 import { getCurrentUser } from '../../../data/services/authService';
 import { createReservation } from '../../../data/services/reservationService';
-import { ROOMS, TIME_SLOTS, USERS } from '../../../data/mock/mockData';
+import { ROOMS, TIME_SLOTS } from '../../../data/mock/mockData';
 import './ReserveButton.css';
 
 export default function ReserveButton({ isAvailable = true, onClick = null, role = 'student' }) {
@@ -17,10 +16,7 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 		timeSlot: TIME_SLOTS[0]?.id ?? '',
 		roomId: ROOMS[0]?.id ?? '',
 		notes: '',
-		inviteMode: 'self',
 	});
-	const [inviteSearch, setInviteSearch] = useState('');
-	const [selectedInvitees, setSelectedInvitees] = useState([]);
 	const [submitMessage, setSubmitMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,19 +41,6 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 		[formData.roomId]
 	);
 
-	const inviteCandidates = useMemo(() => {
-		const query = inviteSearch.trim().toLowerCase();
-
-		return USERS.filter((user) => user.role === 'student' && user.id !== currentUser?.id)
-			.filter((user) => !selectedInvitees.some((invitee) => invitee.id === user.id))
-			.filter((user) => {
-				if (!query) return true;
-				return [user.name, user.email, user.studentId]
-					.filter(Boolean)
-					.some((field) => field.toLowerCase().includes(query));
-			});
-	}, [currentUser?.id, inviteSearch, selectedInvitees]);
-
 	function handleClick(event) {
 		if (onClick) {
 			onClick(event);
@@ -75,15 +58,6 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 		}));
 	}
 
-	function addInvitee(user) {
-		setSelectedInvitees((prev) => [...prev, user]);
-		setInviteSearch('');
-	}
-
-	function removeInvitee(userId) {
-		setSelectedInvitees((prev) => prev.filter((invitee) => invitee.id !== userId));
-	}
-
 	async function handleSubmit(event) {
 		event.preventDefault();
 
@@ -95,14 +69,6 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 		setIsSubmitting(true);
 		setSubmitMessage('Submitting reservation...');
 
-		const invitees = formData.inviteMode === 'invite' ? selectedInvitees : [];
-
-		if (formData.inviteMode === 'invite' && invitees.length === 0) {
-			setSubmitMessage('Search and add at least one student to invite others.');
-			setIsSubmitting(false);
-			return;
-		}
-
 		try {
 			const createdReservation = await createReservation({
 				userId: currentUser.id,
@@ -110,8 +76,6 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 				date: formData.date,
 				slotIds: [formData.timeSlot],
 				notes: formData.notes,
-				reservationMode: formData.inviteMode,
-				invitees,
 			});
 
 			setSubmitMessage(`Reservation created successfully: ${createdReservation.id}`);
@@ -133,8 +97,15 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 					width: 'auto',
 				}}
 			>
-				<span className="reserve-fab__icon">+</span>
-				<span className="reserve-fab__label">{isAvailable ? 'Reserve' : 'Full'}</span>
+				<div className="fab-wrapper">
+					<span className="reserve-fab__icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+							<path d="M12 5v14M5 12h14" />
+						</svg>
+					</span>
+
+					<span className="reserve-fab__label">{isAvailable ? 'Reserve' : 'Full'}</span>
+				</div>
 			</Button>
 
 			<Modal
@@ -143,73 +114,10 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 				onClose={() => setIsModalOpen(false)}
 			>
 				<form className="reserve-modal-form" onSubmit={handleSubmit}>
-					<Tabs
-						ariaLabel="Reservation mode"
-						tabs={[
-							{ value: 'self', label: 'Self Only' },
-							{ value: 'invite', label: 'Invite Others' },
-						]}
-						value={formData.inviteMode}
-						onChange={(value) => handleChange('inviteMode', value)}
-						className="reserve-modal-form__tabs"
-					/>
-
 					<div className="reserve-modal-form__summary">
 						<p>Booking for: <strong>{currentUser?.name ?? 'Current user'}</strong></p>
 						<p>Role: <strong>{role}</strong></p>
 					</div>
-
-					{formData.inviteMode === 'invite' ? (
-						<div className="reserve-modal-form__search-box">
-							<label className="reserve-modal-field">
-								<span>Search Students</span>
-								<input
-									type="text"
-									value={inviteSearch}
-									onChange={(event) => setInviteSearch(event.target.value)}
-									placeholder="Search by name, email, or student ID"
-								/>
-							</label>
-
-							{selectedInvitees.length > 0 ? (
-								<div className="reserve-modal-form__chips" aria-label="Selected invitees">
-									{selectedInvitees.map((invitee) => (
-										<button
-											type="button"
-											key={invitee.id}
-											className="reserve-modal-form__chip"
-											onClick={() => removeInvitee(invitee.id)}
-											aria-label={`Remove ${invitee.name}`}
-										>
-											<span>{invitee.name}</span>
-											<span aria-hidden="true">×</span>
-										</button>
-									))}
-								</div>
-							) : null}
-
-							{inviteCandidates.length > 0 ? (
-								<div className="reserve-modal-form__search-results" role="listbox" aria-label="Student search results">
-									{inviteCandidates.map((user) => (
-										<button
-											type="button"
-											key={user.id}
-											className="reserve-modal-form__result"
-											onClick={() => addInvitee(user)}
-										>
-											<div className="reserve-modal-form__result-main">
-												<strong>{user.name}</strong>
-												<span>{user.email}</span>
-											</div>
-											<div className="reserve-modal-form__result-meta">{user.studentId}</div>
-										</button>
-									))}
-								</div>
-							) : (
-								<p className="reserve-modal-form__hint">No matching students found.</p>
-							)}
-						</div>
-					) : null}
 
 					<label className="reserve-modal-field">
 						<span>Date</span>

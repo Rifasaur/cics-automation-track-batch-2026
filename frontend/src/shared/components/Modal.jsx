@@ -1,13 +1,48 @@
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import '../styles/Modal.css';
 
 export default function Modal({ isOpen, title, children, onClose }) {
-	if (!isOpen) return null;
+	const [shouldRender, setShouldRender] = useState(isOpen);
+	const [isClosing, setIsClosing] = useState(false);
+
+	useEffect(() => {
+		let timeoutId;
+
+		if (isOpen) {
+			setShouldRender(true);
+			setIsClosing(false);
+			return () => {
+				if (timeoutId) clearTimeout(timeoutId);
+			};
+		}
+
+		if (shouldRender) {
+			setIsClosing(true);
+			timeoutId = window.setTimeout(() => {
+				setShouldRender(false);
+				setIsClosing(false);
+			}, 220);
+		}
+
+		return () => {
+			if (timeoutId) clearTimeout(timeoutId);
+		};
+	}, [isOpen, shouldRender]);
+
+	if (!shouldRender) return null;
+
+	const backdropClassName = [
+		'ui-modal__backdrop',
+		isClosing ? 'ui-modal__backdrop--closing' : 'ui-modal__backdrop--opening',
+	].join(' ');
+
+	const modalClassName = ['ui-modal', isClosing ? 'ui-modal--closing' : 'ui-modal--opening'].join(' ');
 
 	return createPortal(
-		<div className="ui-modal__backdrop" role="presentation" onClick={onClose}>
+		<div className={backdropClassName} role="presentation" onClick={onClose}>
 			<div
-				className="ui-modal"
+				className={modalClassName}
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="ui-modal-title"
