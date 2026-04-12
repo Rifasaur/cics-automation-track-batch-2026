@@ -36,7 +36,7 @@ export default function PendingRequests() {
 	}
 
 	return (
-		<section style={{ padding: '2rem', display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
+		<section className="dashboard-page">
 			<PageHeader
 				title="Pending Requests"
 				subtitle="Approve or decline requests submitted by students."

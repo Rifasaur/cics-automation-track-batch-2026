@@ -1,7 +1,8 @@
 .ui-layout-container {
-	width: min(100% - (var(--container-pad) * 2), var(--container-max));
+	width: 100%;
+	padding-inline: var(--space-3);
+	padding-block: var(--space-4);
 	margin-inline: auto;
-	padding-block: var(--space-6);
 }
 
 .ui-layout-container--centered {
@@ -15,8 +16,16 @@
 	grid-template-columns: 1fr;
 }
 
+@media (min-width: 640px) {
+	.ui-layout-container {
+		padding-inline: var(--container-pad);
+		padding-block: var(--space-6);
+	}
+}
+
 @media (min-width: 768px) {
 	.ui-layout-container {
+		width: min(100% - (var(--container-pad) * 2), var(--container-max));
 		padding-block: var(--space-8);
 	}
 

@@ -24,7 +24,7 @@ export default function Users() {
 	}, []);
 
 	return (
-		<section style={{ padding: '2rem' }}>
+		<section className="dashboard-page">
 			<PageHeader
 				title="Users"
 				subtitle="View registered students and administrators."

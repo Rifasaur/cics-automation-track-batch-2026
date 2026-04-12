@@ -26,13 +26,13 @@ export default function Reservations() {
 	}, []);
 
 	return (
-		<section style={{ padding: '2rem', display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
+		<section className="dashboard-page">
 			<PageHeader
 				title="My Reservations"
 				subtitle={user ? `Review upcoming and past bookings for ${user.name}.` : 'Review upcoming and past bookings here.'}
 			/>
 
-			<div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+			<div style={{ flex: 1, minHeight: 0 }}>
 				<ReservationsTable userRole="student" userId={user?.id} />
 			</div>
 		</section>

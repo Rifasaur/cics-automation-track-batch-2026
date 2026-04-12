@@ -10,13 +10,13 @@ export default function Schedule() {
 	};
 
 	return (
-		<section style={{ padding: '2rem', display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
+		<section className="dashboard-page">
 			<PageHeader
 				title="Schedule"
 				subtitle="Browse available time slots and reserve a spot for today."
 			/>
 
-			<div style={{ flex: 1, minHeight: 0, overflow: 'hidden', overflowY: 'auto' }}>
+			<div style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
 				<SlotsBreakdown onSlotSelect={handleSlotSelect} />
 			</div>
 		</section>

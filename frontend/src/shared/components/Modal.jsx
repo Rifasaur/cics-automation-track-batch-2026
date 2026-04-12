@@ -51,7 +51,9 @@ export default function Modal({ isOpen, title, children, onClose }) {
 				<div className="ui-modal__header">
 					<h2 id="ui-modal-title" className="ui-modal__title">{title}</h2>
 					<button type="button" className="ui-modal__close" onClick={onClose} aria-label="Close modal">
-						×
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
+							<path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+						</svg>
 					</button>
 				</div>
 				<div className="ui-modal__body">{children}</div>

@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUsers } from '../../data/services/authService';
 import './AuthPages.css';
 
 export default function Register() {
 	const navigate = useNavigate();
-	const [users, setUsers] = useState([]);
 	const [formValues, setFormValues] = useState({
 		fullName: '',
 		email: '',
@@ -15,24 +13,6 @@ export default function Register() {
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [feedback, setFeedback] = useState('Create your account to reserve hourly slots in the Learning Commons.');
-
-	useEffect(() => {
-		let active = true;
-
-		async function loadUsers() {
-			const items = await getUsers();
-
-			if (!active) return;
-
-			setUsers(items);
-		}
-
-		loadUsers();
-
-		return () => {
-			active = false;
-		};
-	}, []);
 
 	function updateField(key, value) {
 		setFormValues((prev) => ({
@@ -62,9 +42,10 @@ export default function Register() {
 	return (
 		<section className="auth-page auth-page--register">
 			<aside className="auth-showcase auth-showcase--register">
-				<div className="auth-showcase__chip">Create Student Access</div>
-				<h1 className="auth-showcase__title">Start booking your learning commons sessions in minutes.</h1>
-				<p className="auth-showcase__subtitle">
+				<img src="/UST-CICS Logo.png" alt="UST CICS" className="auth-showcase__logo" />
+				<h1 className="auth-showcase__title">CICS Learning Common Room</h1>
+				<p className="auth-showcase__subtitle">University of Santo Tomas</p>
+				<p className="auth-showcase__desc">
 					Register once and get access to scheduling, check-in tracking, and reservation history.
 				</p>
 				<div className="auth-showcase__list-card">
@@ -76,6 +57,12 @@ export default function Register() {
 					</ul>
 				</div>
 			</aside>
+
+			<div className="auth-mobile-brand">
+				<img src="/UST-CICS Logo.png" alt="UST CICS" className="auth-mobile-brand__logo" />
+				<h1 className="auth-mobile-brand__title">CICS Learning Common Room</h1>
+				<p className="auth-mobile-brand__subtitle">University of Santo Tomas</p>
+			</div>
 
 			<div className="auth-panel">
 				<div className="auth-panel__header">
@@ -144,7 +131,6 @@ export default function Register() {
 				</form>
 
 				<p className="auth-status-message">{feedback}</p>
-				<p className="auth-session-message">Existing mock accounts: {users.length}</p>
 				<p className="auth-panel__footer">
 					Already registered? <Link to="/auth/login">Sign in</Link>
 				</p>

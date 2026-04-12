@@ -8,15 +8,30 @@
 }
 
 .ui-card--pad-sm {
-	padding: var(--space-3);
+	padding: var(--space-2);
 }
 
 .ui-card--pad-md {
-	padding: var(--space-5);
+	padding: var(--space-3);
 }
 
 .ui-card--pad-lg {
-	padding: var(--space-8);
+	padding: var(--space-5);
+}
+
+/* ≥ 640px — standard desktop padding */
+@media (min-width: 640px) {
+	.ui-card--pad-sm {
+		padding: var(--space-3);
+	}
+
+	.ui-card--pad-md {
+		padding: var(--space-5);
+	}
+
+	.ui-card--pad-lg {
+		padding: var(--space-8);
+	}
 }
 
 .ui-card--elevated {

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { cancelReservation } from '../../../data/services/reservationService';
 import './ReservationsTable.css';
 
 // Extended mock data matching the structure in mockData.js
@@ -104,7 +105,59 @@ export default function ReservationsTable({ userRole = 'student', userId = null 
   const [activeTab, setActiveTab] = useState('all');
   const [sortBy, setSortBy] = useState('Latest First');
   const [currentPage, setCurrentPage] = useState(1);
+  const [reservations, setReservations] = useState(RESERVATIONS_DATA);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [cancellingId, setCancellingId] = useState(null);
+  const menuRef = useRef(null);
   const itemsPerPage = 12;
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!openMenuId) return;
+
+    function handleOutsideClick(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenuId(null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [openMenuId]);
+
+  const handleCancelReservation = useCallback(async (reservationId) => {
+    setCancellingId(reservationId);
+    setOpenMenuId(null);
+    try {
+      await cancelReservation(reservationId);
+      setReservations((prev) =>
+        prev.map((r) => (r.id === reservationId ? { ...r, status: 'cancelled' } : r))
+      );
+    } catch {
+      // Silently revert — in production show an error toast
+    } finally {
+      setCancellingId(null);
+    }
+  }, []);
+
+  function getRowActions(reservation) {
+    const { status } = reservation;
+    if (userRole === 'student') {
+      if (['pending', 'confirmed'].includes(status)) {
+        return [{ label: 'Cancel Reservation', action: () => handleCancelReservation(reservation.id), danger: true }];
+      }
+      return [];
+    }
+    // Admin / staff actions
+    const actions = [];
+    if (status === 'pending') {
+      actions.push({ label: 'Confirm', action: () => {}, danger: false });
+    }
+    if (['pending', 'confirmed'].includes(status)) {
+      actions.push({ label: 'Cancel', action: () => handleCancelReservation(reservation.id), danger: true });
+    }
+    return actions;
+  }
 
   // Get user name by ID
   const getUserName = (userId) => {
@@ -134,7 +187,7 @@ export default function ReservationsTable({ userRole = 'student', userId = null 
   };
 
   // Filter data based on role and active tab
-  let filteredData = RESERVATIONS_DATA.filter(item => {
+  let filteredData = reservations.filter(item => {
     // If student, only show their reservations
     if (userRole === 'student' && userId) {
       if (item.userId !== userId) return false;
@@ -256,9 +309,42 @@ export default function ReservationsTable({ userRole = 'student', userId = null 
                     <span className={statusInfo.className}>{statusInfo.label}</span>
                   </td>
                   <td className="table-cell">
-                    <button className="action-menu-btn" aria-label="More actions">
-                      ⋮
-                    </button>
+                    {(() => {
+                      const actions = getRowActions(reservation);
+                      if (actions.length === 0) return <span className="action-none">—</span>;
+                      const isOpen = openMenuId === reservation.id;
+                      const isCancelling = cancellingId === reservation.id;
+                      return (
+                        <div
+                          className="action-menu-container"
+                          ref={isOpen ? menuRef : null}
+                        >
+                          <button
+                            className={`action-menu-btn ${isCancelling ? 'action-menu-btn--loading' : ''}`}
+                            aria-label="More actions"
+                            aria-expanded={isOpen}
+                            disabled={isCancelling}
+                            onClick={() => setOpenMenuId(isOpen ? null : reservation.id)}
+                          >
+                            {isCancelling ? '…' : '⋮'}
+                          </button>
+                          {isOpen && (
+                            <div className="action-dropdown" role="menu">
+                              {actions.map((item) => (
+                                <button
+                                  key={item.label}
+                                  className={`action-dropdown__item ${item.danger ? 'action-dropdown__item--danger' : ''}`}
+                                  role="menuitem"
+                                  onClick={item.action}
+                                >
+                                  {item.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </td>
                 </tr>
               );

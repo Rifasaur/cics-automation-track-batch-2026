@@ -54,6 +54,14 @@
   gap: var(--space-3);
   min-height: 12rem;
   background: linear-gradient(180deg, color-mix(in oklab, var(--bg-card) 96%, white 4%), var(--bg-card));
+  transition:
+    transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.availability-panel__card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 .availability-panel__card-label {

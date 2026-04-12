@@ -24,7 +24,7 @@ export default function ManageReservations() {
 	}, []);
 
 	return (
-		<section style={{ padding: '2rem' }}>
+		<section className="dashboard-page">
 			<PageHeader
 				title="Manage Reservations"
 				subtitle="Review, approve, or cancel reservations here."

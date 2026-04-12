@@ -11,7 +11,7 @@ export default function StudentLayout() {
             <main className="app-main">
                 <div className="app-main__surface">
                     <Topbar
-                        title="Student Dashboard"
+                        title="Dashboard"
                         subtitle="Reserve slots, track usage, and review your learning commons activity."
                     />
                     <div className="app-main__content">

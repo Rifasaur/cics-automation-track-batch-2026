@@ -6,6 +6,14 @@
 	border-radius: var(--radius-pill);
 	border: 1px solid var(--border-subtle);
 	background: color-mix(in oklab, var(--bg-card) 86%, var(--secondary-2) 14%);
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+}
+
+.ui-tabs::-webkit-scrollbar {
+	display: none;
 }
 
 .ui-tabs__tab {
@@ -13,8 +21,8 @@
 	align-items: center;
 	justify-content: center;
 	gap: var(--space-2);
-	min-width: 2.7rem;
-	min-height: 2.7rem;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
 	border: 0;
 	border-radius: var(--radius-pill);
 	padding: 0.45rem 0.75rem;
@@ -22,6 +30,8 @@
 	background: transparent;
 	font-weight: 600;
 	cursor: pointer;
+	white-space: nowrap;
+	flex-shrink: 0;
 	transition:
 		background-color var(--duration-base) var(--ease-standard),
 		color var(--duration-base) var(--ease-standard),

@@ -52,3 +52,20 @@ export function createReservation(reservationInput) {
 		}
 	);
 }
+
+export function cancelReservation(reservationId) {
+	return handleRequest(
+		() => {
+			const index = RESERVATIONS.findIndex((r) => r.id === reservationId);
+			if (index === -1) throw new Error('Reservation not found');
+			RESERVATIONS[index] = { ...RESERVATIONS[index], status: 'cancelled' };
+			return enrichReservation(RESERVATIONS[index]);
+		},
+		`/api/reservations/${encodeURIComponent(reservationId)}`,
+		{
+			method: 'PATCH',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ status: 'cancelled' }),
+		}
+	);
+}

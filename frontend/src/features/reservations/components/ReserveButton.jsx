@@ -19,6 +19,9 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 	});
 	const [submitMessage, setSubmitMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [submittedReservation, setSubmittedReservation] = useState(null);
+
+	const todayStr = new Date().toISOString().slice(0, 10);
 
 	useEffect(() => {
 		let active = true;
@@ -49,6 +52,24 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 
 		setIsModalOpen(true);
 		setSubmitMessage('');
+		setSubmittedReservation(null);
+	}
+
+	function handleClose() {
+		setIsModalOpen(false);
+		setSubmittedReservation(null);
+		setSubmitMessage('');
+	}
+
+	function handleMakeAnother() {
+		setSubmittedReservation(null);
+		setSubmitMessage('');
+		setFormData({
+			date: new Date().toISOString().slice(0, 10),
+			timeSlot: TIME_SLOTS[0]?.id ?? '',
+			roomId: ROOMS[0]?.id ?? '',
+			notes: '',
+		});
 	}
 
 	function handleChange(key, value) {
@@ -67,7 +88,7 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 		}
 
 		setIsSubmitting(true);
-		setSubmitMessage('Submitting reservation...');
+		setSubmitMessage('');
 
 		try {
 			const createdReservation = await createReservation({
@@ -78,7 +99,7 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 				notes: formData.notes,
 			});
 
-			setSubmitMessage(`Reservation created successfully: ${createdReservation.id}`);
+			setSubmittedReservation(createdReservation);
 		} catch (error) {
 			setSubmitMessage('Unable to create reservation right now. Please try again.');
 		} finally {
@@ -111,8 +132,35 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 			<Modal
 				isOpen={isModalOpen}
 				title="Reserve a Slot"
-				onClose={() => setIsModalOpen(false)}
+				onClose={handleClose}
 			>
+				{submittedReservation ? (
+					<div className="reserve-success">
+						<div className="reserve-success__icon" aria-hidden="true">✓</div>
+						<h3 className="reserve-success__title">Reservation Submitted!</h3>
+						<p className="reserve-success__detail">
+							<strong>{submittedReservation.roomName}</strong>
+						</p>
+						<p className="reserve-success__detail">
+							{new Date(submittedReservation.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+						</p>
+						{submittedReservation.slotIds?.length > 0 && (
+							<p className="reserve-success__detail">
+								{TIME_SLOTS.find(s => s.id === submittedReservation.slotIds[0])?.start} –{' '}
+								{TIME_SLOTS.find(s => s.id === submittedReservation.slotIds[submittedReservation.slotIds.length - 1])?.end}
+							</p>
+						)}
+						<p className="reserve-success__ref">Ref: {submittedReservation.id}</p>
+						<div className="reserve-modal-form__actions" style={{ marginTop: '1.5rem' }}>
+							<button type="button" className="reserve-modal-form__secondary" onClick={handleMakeAnother}>
+								Make Another
+							</button>
+							<button type="button" className="reserve-modal-form__primary" onClick={handleClose}>
+								Close
+							</button>
+						</div>
+					</div>
+				) : (
 				<form className="reserve-modal-form" onSubmit={handleSubmit}>
 					<div className="reserve-modal-form__summary">
                         <div className="booking-rules" padding="lg" elevated>
@@ -143,7 +191,7 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 
 					<label className="reserve-modal-field">
 						<span>Date</span>
-						<input type="date" value={formData.date} onChange={(event) => handleChange('date', event.target.value)} required />
+						<input type="date" value={formData.date} min={todayStr} onChange={(event) => handleChange('date', event.target.value)} required />
 					</label>
 
 					<label className="reserve-modal-field">
@@ -184,7 +232,7 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 					</div>
 
 					<div className="reserve-modal-form__actions">
-						<button type="button" className="reserve-modal-form__secondary" onClick={() => setIsModalOpen(false)}>
+						<button type="button" className="reserve-modal-form__secondary" onClick={handleClose}>
 							Cancel
 						</button>
 						<button type="submit" className="reserve-modal-form__primary" disabled={!isAvailable || isSubmitting}>
@@ -192,8 +240,9 @@ export default function ReserveButton({ isAvailable = true, onClick = null, role
 						</button>
 					</div>
 
-					{submitMessage ? <p className="reserve-modal-form__message">{submitMessage}</p> : null}
+					{submitMessage ? <p className="reserve-modal-form__message reserve-modal-form__message--error">{submitMessage}</p> : null}
 				</form>
+				)}
 			</Modal>
 		</>
 	);

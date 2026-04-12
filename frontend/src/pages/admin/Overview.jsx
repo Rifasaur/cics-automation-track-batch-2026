@@ -32,16 +32,16 @@ export default function Overview() {
 	}, []);
 
 	if (!metrics) {
-		return <section style={{ padding: '2rem' }}>Loading admin overview...</section>;
+		return <section className="dashboard-page">Loading admin overview...</section>;
 	}
 
 	return (
-		<section style={{ padding: '2rem' }}>
+		<section className="dashboard-page">
 			<PageHeader
 				title="Admin Overview"
 				subtitle="High-level operational snapshot for the learning commons."
 			/>
-			<div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', marginTop: '1.5rem' }}>
+			<div className="dashboard-page__metrics">
 				{metrics.map((metric) => (
 					<article key={metric.label}>
 						<strong>{metric.label}</strong>

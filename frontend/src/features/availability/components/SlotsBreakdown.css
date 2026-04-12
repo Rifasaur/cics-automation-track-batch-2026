@@ -1,7 +1,11 @@
+/* ============================================================
+   SlotsBreakdown — Mobile-first
+   ============================================================ */
+
 .slots-breakdown {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
   height: 100%;
 }
 
@@ -160,13 +164,13 @@
 /* Slot row */
 .timeline__slot {
   display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 0.75rem;
-  padding: 0.5rem 0.625rem;
+  grid-template-columns: 50px 1fr;
+  gap: 0.5rem;
+  padding: 0.5rem;
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-standard);
-  min-height: 3.5rem;
+  min-height: 3rem;
   position: relative;
   margin: 0;
 }
@@ -617,89 +621,38 @@
   cursor: not-allowed;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .slots-breakdown {
-    grid-template-columns: 1fr;
-  }
-
-  .slots-breakdown__timeline-wrap {
-    height: auto;
-    overflow: visible;
-  }
-
-  .slots-breakdown__sidebar-wrap {
-    height: auto;
-    overflow: visible;
-  }
-
-  .slots-breakdown__sidebar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    padding: 1rem;
-    overflow: visible;
-  }
-
-  .sidebar__content-wrapper {
-    overflow: visible;
-    padding-right: 0;
-  }
-
-  .timeline__container {
-    min-height: 28rem;
-  }
-}
-
-@media (max-width: 768px) {
+/* ============================================================
+   Responsive — Mobile-first breakpoints
+   ============================================================ */
+@media (min-width: 768px) {
   .slots-breakdown {
     gap: 1.5rem;
   }
 
-  .slots-breakdown__sidebar {
-    grid-template-columns: 1fr;
-  }
-
   .timeline__slot {
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 60px 1fr;
     gap: 0.75rem;
-    padding: 0.5rem;
-    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.625rem;
   }
 
   .timeline__slot-time {
-    font-size: 0.75rem;
-  }
-
-  .timeline__slot-header {
-    flex-wrap: wrap;
+    font-size: 0.85rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (min-width: 1024px) {
   .slots-breakdown {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
   }
 
-  .timeline__container {
-    min-height: 24rem;
-  }
-
-  .timeline__slot {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-    min-height: auto;
-  }
-
-  .timeline__slot-time {
-    border-right: none;
-    border-bottom: 2px solid var(--border-subtle);
-    padding: 0.25rem 0;
-    margin-bottom: 0.25rem;
+  .slots-breakdown__sidebar-wrap {
+    height: 100%;
   }
 
   .slots-breakdown__sidebar {
-    grid-template-columns: 1fr;
+    height: 100%;
+    overflow: hidden;
   }
 }

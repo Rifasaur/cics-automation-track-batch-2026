@@ -1,3 +1,9 @@
+/* ============================================================
+   ReservationsTable — Mobile-first responsive
+   Mobile: card-based layout
+   Desktop: traditional table
+   ============================================================ */
+
 .reservations-table {
   display: flex;
   flex-direction: column;
@@ -9,20 +15,22 @@
 
 .reservations-table__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-4);
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--space-3);
   border-bottom: 1px solid var(--border-subtle);
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .reservations-table__tabs {
   display: flex;
   gap: var(--space-2);
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .tab-button {
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   background: transparent;
@@ -33,6 +41,9 @@
   transition: all var(--duration-fast) var(--ease-standard);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  min-height: 44px;
+  flex: 1;
+  text-align: center;
 }
 
 .tab-button:hover {
@@ -51,6 +62,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  width: 100%;
 }
 
 .sort-dropdown {
@@ -63,6 +75,8 @@
   font-weight: 500;
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-standard);
+  width: 100%;
+  min-height: 44px;
 }
 
 .sort-dropdown:hover {
@@ -79,12 +93,14 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .reservations-table__table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--text-sm);
+  min-width: 600px;
 }
 
 .table-header-row {
@@ -96,11 +112,11 @@
 }
 
 .table-header-cell {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   text-align: left;
   font-weight: 600;
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
@@ -116,7 +132,7 @@
 }
 
 .table-cell {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   vertical-align: middle;
 }
 
@@ -125,11 +141,12 @@
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
+  font-size: 0.85rem;
 }
 
 /* Student ID column */
 .student-id {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   font-family: 'Courier New', monospace;
   white-space: nowrap;
@@ -140,6 +157,7 @@
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
+  font-size: 0.85rem;
 }
 
 /* Date & Time column */
@@ -153,17 +171,18 @@
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
+  font-size: 0.85rem;
 }
 
 .time {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   white-space: nowrap;
 }
 
 /* Check-in column */
 .check-in-time {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -213,8 +232,10 @@
 
 /* Action Menu */
 .action-menu-btn {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 44px;
+  min-height: 44px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
@@ -232,20 +253,86 @@
   color: var(--text-primary);
 }
 
+.action-menu-btn--loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-none {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: block;
+  text-align: center;
+}
+
+/* Action Dropdown */
+.action-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.action-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 100;
+  min-width: 10rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  animation: dropdown-in 0.12s var(--ease-standard);
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.action-dropdown__item {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.action-dropdown__item:hover {
+  background: var(--bg-elevated);
+}
+
+.action-dropdown__item--danger {
+  color: var(--primary-5);
+}
+
+.action-dropdown__item--danger:hover {
+  background: color-mix(in oklab, var(--primary-5) 10%, transparent 90%);
+}
+
 /* Footer */
 .reservations-table__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3);
   border-top: 1px solid var(--border-subtle);
   background: var(--bg-elevated);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .pagination-info {
   font-style: italic;
+  font-size: 0.8rem;
 }
 
 .pagination-controls {
@@ -254,8 +341,10 @@
 }
 
 .pagination-btn {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   background: white;
@@ -278,47 +367,55 @@
   cursor: not-allowed;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .table-header-cell,
-  .table-cell {
-    padding: var(--space-2) var(--space-3);
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 768px) {
+/* ============================================================
+   Tablet+ (≥640px)
+   ============================================================ */
+@media (min-width: 640px) {
   .reservations-table__header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4);
+    gap: var(--space-4);
   }
 
-  .reservations-table__tabs {
-    width: 100%;
-    flex-wrap: wrap;
+  .tab-button {
+    flex: none;
+    min-height: auto;
+    padding: var(--space-1) var(--space-3);
   }
 
   .reservations-table__controls {
-    width: 100%;
-    justify-content: flex-end;
+    width: auto;
   }
 
   .sort-dropdown {
-    flex: 1;
+    width: auto;
+    min-height: auto;
+    flex: none;
   }
 
+  .reservations-table__footer {
+    padding: var(--space-3) var(--space-4);
+  }
+}
+
+/* ============================================================
+   Desktop (≥1024px)
+   ============================================================ */
+@media (min-width: 1024px) {
   .table-header-cell {
-    font-size: 0.65rem;
-    padding: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.75rem;
   }
 
   .table-cell {
-    padding: var(--space-2);
+    padding: var(--space-3) var(--space-4);
   }
 
   .user-name,
   .room-name,
-  .time {
-    font-size: 0.8rem;
+  .date {
+    font-size: var(--text-sm);
   }
 }

@@ -76,26 +76,38 @@
 	background-color: #ae192a;
 }
 
+/* === Mobile-first: stacked layout, compact grid === */
 .capacity-map__content {
-	display: grid;
-	grid-template-columns: 1fr 320px;
-	gap: 1.5rem;
-	align-items: start;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	align-items: stretch;
 }
 
 .capacity-map__grid {
 	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	gap: 0.75rem;
-	padding: 1.5rem;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 0.4rem;
+	padding: 0.5rem;
 	background-color: #f9f9f9;
 	border-radius: 0.75rem;
 	border: 1px solid #e5e5e5;
 }
 
-@media (max-width: 1200px) {
+/* ≥ 480px — slightly more grid columns */
+@media (min-width: 480px) {
+	.capacity-map__grid {
+		grid-template-columns: repeat(6, 1fr);
+		gap: 0.5rem;
+		padding: 0.75rem;
+	}
+}
+
+/* ≥ 768px — side-by-side layout */
+@media (min-width: 768px) {
 	.capacity-map__content {
-		grid-template-columns: 1fr 280px;
+		display: grid;
+		grid-template-columns: 1fr;
 		gap: 1rem;
 	}
 
@@ -106,24 +118,17 @@
 	}
 }
 
-@media (max-width: 768px) {
+/* ≥ 1024px — content + sidebar stats */
+@media (min-width: 1024px) {
 	.capacity-map__content {
-		grid-template-columns: 1fr;
-		gap: 1rem;
+		grid-template-columns: 1fr 280px;
+		gap: 1.5rem;
 	}
 
 	.capacity-map__grid {
-		grid-template-columns: repeat(6, 1fr);
-		gap: 0.5rem;
-		padding: 0.75rem;
-	}
-}
-
-@media (max-width: 480px) {
-	.capacity-map__grid {
-		grid-template-columns: repeat(5, 1fr);
-		gap: 0.4rem;
-		padding: 0.5rem;
+		grid-template-columns: repeat(10, 1fr);
+		gap: 0.75rem;
+		padding: 1.5rem;
 	}
 }
 
