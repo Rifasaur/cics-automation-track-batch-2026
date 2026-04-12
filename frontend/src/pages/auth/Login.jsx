@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCurrentUser, login } from '../../data/services/authService';
+import cicsLogo from '../../assets/CICS-Logo.png';
 import './AuthPages.css';
 
 export default function Login() {
 	const navigate = useNavigate();
 	const [currentUser, setCurrentUser] = useState(null);
-	const [email, setEmail] = useState('juan@ust.edu.ph');
+	const [isPageLoading, setIsPageLoading] = useState(true);
+	const [email, setEmail] = useState('juan.delacruz.cics@ust.edu.ph');
 	const [password, setPassword] = useState('');
 	const [rememberMe, setRememberMe] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,18 +17,36 @@ export default function Login() {
 	useEffect(() => {
 		let active = true;
 
-		async function loadCurrentUser() {
-			const user = await getCurrentUser();
+		async function loadLoginPage() {
+			try {
+				const [user] = await Promise.all([
+					getCurrentUser(),
+					new Promise((resolve) => setTimeout(resolve, 700)),
+				]);
 
-			if (!active) return;
+				if (!active) return;
 
-			setCurrentUser(user);
+				setCurrentUser(user);
+			} finally {
+				if (active) {
+					setIsPageLoading(false);
+				}
+			}
 		}
 
-		loadCurrentUser();
+		loadLoginPage();
 
 		return () => {
 			active = false;
+		};
+	}, []);
+
+	useEffect(() => {
+		const previousTitle = document.title;
+		document.title = 'Login - UST CICS Learning Commons';
+
+		return () => {
+			document.title = previousTitle;
 		};
 	}, []);
 
@@ -59,7 +79,11 @@ export default function Login() {
 	}
 
 	return (
-		<section className="auth-page auth-page--login">
+		<section
+			className={`auth-page auth-page--login ${
+				isPageLoading ? 'auth-page--content-hidden' : 'auth-page--content-visible'
+			}`}
+		>
 			<aside className="auth-showcase">
 				<div className="auth-showcase__chip">Learning Commons Portal</div>
 				<h1 className="auth-showcase__title">Study smarter with reservation-first access.</h1>
@@ -81,11 +105,12 @@ export default function Login() {
 
 				<form className="auth-form" onSubmit={handleSubmit}>
 					<label className="auth-field">
-						<span>Email Address</span>
+						<span>UST Email Address</span>
 						<input
 							type="email"
 							value={email}
 							onChange={(event) => setEmail(event.target.value)}
+							placeholder="Enter your UST email address"
 							required
 						/>
 					</label>
@@ -108,9 +133,9 @@ export default function Login() {
 								checked={rememberMe}
 								onChange={(event) => setRememberMe(event.target.checked)}
 							/>
-							<span>Remember me</span>
+							<span>Remember Me</span>
 						</label>
-						<button type="button" className="auth-link-btn">Forgot password?</button>
+						<button type="button" className="auth-link-btn">Forgot Password?</button>
 					</div>
 
 					<button type="submit" className="auth-primary-btn" disabled={isSubmitting}>
@@ -136,6 +161,25 @@ export default function Login() {
 					New here? <Link to="/auth/register">Create an account</Link>
 				</p>
 			</div>
+			{isPageLoading ? (
+				<div
+					className="auth-register-transition"
+					role="status"
+					aria-live="polite"
+					aria-label="Loading login page"
+				>
+					<div className="auth-register-transition__card">
+						<img
+							src={cicsLogo}
+							alt="UST CICS logo"
+							className="auth-register-transition__logo"
+						/>
+						<div className="auth-register-transition__loader" aria-hidden="true">
+							<span></span>
+						</div>
+					</div>
+				</div>
+			) : null}
 		</section>
 	);
 }

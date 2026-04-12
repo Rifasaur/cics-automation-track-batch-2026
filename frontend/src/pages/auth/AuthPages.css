@@ -1,12 +1,42 @@
 .auth-page {
   min-height: 100vh;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   display: grid;
   grid-template-columns: minmax(360px, 1fr) minmax(420px, 1fr);
   background:
     radial-gradient(60% 60% at 15% 10%, rgba(190, 21, 46, 0.2) 0%, rgba(190, 21, 46, 0) 70%),
     linear-gradient(145deg, #f5f0e8 0%, #ece3d8 55%, #f6f1eb 100%);
   overflow: hidden;
+  border: none;
+  border-radius: 0;
+}
+
+.auth-page--content-hidden .auth-showcase__chip,
+.auth-page--content-hidden .auth-showcase__title,
+.auth-page--content-hidden .auth-showcase__subtitle,
+.auth-page--content-hidden .auth-showcase__metric-card,
+.auth-page--content-hidden .auth-showcase__list-card,
+.auth-page--content-hidden .auth-panel > * {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+
+.auth-page--content-visible .auth-showcase__chip,
+.auth-page--content-visible .auth-showcase__title,
+.auth-page--content-visible .auth-showcase__subtitle,
+.auth-page--content-visible .auth-showcase__metric-card,
+.auth-page--content-visible .auth-showcase__list-card,
+.auth-page--content-visible .auth-panel > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 420ms var(--ease-standard),
+    transform 560ms var(--ease-standard);
+}
+
+.auth-page--content-visible .auth-panel > * {
+  transition-delay: 80ms;
 }
 
 .auth-showcase {
@@ -17,8 +47,13 @@
   justify-content: center;
   color: #ffffff;
   background:
-    radial-gradient(150% 120% at 95% 112%, rgba(229, 194, 122, 0.24) 0%, rgba(229, 194, 122, 0) 40%),
-    linear-gradient(138deg, #5a0010 0%, #8f001a 46%, #bc1830 100%);
+    linear-gradient(0deg, rgba(90, 0, 16, 0.72), rgba(90, 0, 16, 0.72)),
+    radial-gradient(150% 120% at 95% 112%, rgba(229, 194, 122, 0.22) 0%, rgba(229, 194, 122, 0) 42%),
+    linear-gradient(138deg, rgba(90, 0, 16, 0.78) 0%, rgba(143, 0, 26, 0.72) 46%, rgba(188, 24, 48, 0.66) 100%),
+    url('../../assets/Saint-Pier-Giorgio-Frassati-Building.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   isolation: isolate;
 }
 
@@ -488,14 +523,237 @@
   transform: scaleX(1);
 }
 
-.auth-page--register ::selection {
+.auth-page--register ::selection,
+.auth-page--login ::selection {
   background: rgba(229, 194, 122, 0.42);
   color: #3a1119;
 }
 
-.auth-page--register ::-moz-selection {
+.auth-page--register ::-moz-selection,
+.auth-page--login ::-moz-selection {
   background: rgba(229, 194, 122, 0.42);
   color: #3a1119;
+}
+
+.auth-page--login .auth-panel__header h2,
+.auth-page--login .auth-showcase__title,
+.auth-page--login .auth-showcase__metric-value,
+.auth-page--login .auth-primary-btn {
+  font-weight: 900;
+}
+
+.auth-page--login .auth-panel__header h2,
+.auth-page--login .auth-showcase__title,
+.auth-page--login .auth-showcase__metric-value {
+  font-size: 30px;
+  letter-spacing: -0.04em;
+}
+
+.auth-page--login .auth-panel__header p,
+.auth-page--login .auth-status-message,
+.auth-page--login .auth-session-message,
+.auth-page--login .auth-panel__footer,
+.auth-page--login .auth-panel__footer a,
+.auth-page--login .auth-showcase__subtitle,
+.auth-page--login .auth-showcase__metric-change,
+.auth-page--login .auth-panel__quick-buttons button,
+.auth-page--login .auth-checkbox,
+.auth-page--login .auth-link-btn,
+.auth-page--login .auth-primary-btn,
+.auth-page--login .auth-field input {
+  font-size: 14px !important;
+}
+
+.auth-page--login .auth-field > span,
+.auth-page--login .auth-showcase__chip,
+.auth-page--login .auth-panel__quick-label,
+.auth-page--login .auth-showcase__metric-label {
+  font-size: 12px !important;
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+.auth-page--login .auth-showcase__title,
+.auth-page--login .auth-showcase__subtitle {
+  width: min(100%, 23rem);
+  max-width: min(100%, 23rem);
+}
+
+.auth-page--login .auth-showcase__title {
+  line-height: 1.03;
+  text-align: left;
+  text-wrap: balance;
+  word-spacing: normal;
+  letter-spacing: -0.045em;
+}
+
+.auth-page--login .auth-showcase__subtitle {
+  line-height: 1.6;
+  text-align: justify;
+  text-align-last: left;
+  text-justify: inter-word;
+  word-spacing: -0.02em;
+}
+
+.auth-page--login .auth-field input,
+.auth-page--login .auth-primary-btn,
+.auth-page--login .auth-register-transition__card {
+  border-radius: 1rem;
+}
+
+.auth-page--login .auth-field input,
+.auth-page--login .auth-primary-btn {
+  height: 56px;
+  min-height: 56px;
+  box-sizing: border-box;
+}
+
+.auth-page--login .auth-field input {
+  padding: 0 1rem;
+  line-height: 1.2;
+  background: rgba(255, 255, 255, 0.84);
+  transition:
+    transform 180ms var(--ease-standard),
+    border-color 180ms var(--ease-standard),
+    background-color 180ms var(--ease-standard),
+    box-shadow 220ms var(--ease-standard);
+}
+
+.auth-page--login .auth-field input::placeholder {
+  font-size: 14px;
+  color: rgba(87, 80, 79, 0.46);
+}
+
+.auth-page--login .auth-field input:hover {
+  transform: translateY(-1px);
+  border-color: rgba(190, 21, 46, 0.38);
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 14px 28px rgba(123, 0, 20, 0.09);
+}
+
+.auth-page--login .auth-field input:focus {
+  transform: translateY(-1px);
+  background-color: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(190, 21, 46, 0.13),
+    0 16px 30px rgba(123, 0, 20, 0.09);
+}
+
+.auth-page--login .auth-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  line-height: 1;
+  transition:
+    transform 180ms var(--ease-standard),
+    box-shadow 220ms var(--ease-standard),
+    opacity 180ms var(--ease-standard),
+    background 220ms var(--ease-standard),
+    filter 220ms var(--ease-standard);
+}
+
+.auth-page--login .auth-primary-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.003);
+  background: linear-gradient(125deg, #8d0017 0%, #bb1630 48%, #da203c 100%);
+  box-shadow: 0 16px 32px rgba(123, 0, 20, 0.3);
+  filter: saturate(1.05) brightness(1.01);
+}
+
+.auth-page--login .auth-checkbox {
+  transition:
+    color 180ms var(--ease-standard),
+    transform 180ms var(--ease-standard);
+}
+
+.auth-page--login .auth-checkbox:hover {
+  color: #4f4646;
+  transform: translateY(-1px);
+}
+
+.auth-page--login .auth-checkbox input {
+  transition:
+    transform 180ms var(--ease-standard),
+    box-shadow 180ms var(--ease-standard);
+}
+
+.auth-page--login .auth-checkbox input:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 0 3px rgba(190, 21, 46, 0.12);
+}
+
+.auth-page--login .auth-link-btn {
+  transition:
+    color 180ms var(--ease-standard),
+    transform 180ms var(--ease-standard),
+    text-shadow 220ms var(--ease-standard);
+}
+
+.auth-page--login .auth-link-btn:hover,
+.auth-page--login .auth-link-btn:focus-visible {
+  color: var(--primary-6);
+  transform: translateY(-1px);
+  text-shadow: 0 6px 14px rgba(190, 21, 46, 0.12);
+}
+
+.auth-page--login .auth-panel__quick-buttons button {
+  flex: 0 0 5.75rem;
+  min-width: 5.75rem;
+  justify-content: center;
+  transition:
+    transform 180ms var(--ease-standard),
+    border-color 180ms var(--ease-standard),
+    background-color 180ms var(--ease-standard),
+    box-shadow 220ms var(--ease-standard),
+    color 180ms var(--ease-standard);
+}
+
+.auth-page--login .auth-panel__quick-buttons button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(190, 21, 46, 0.36);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 24px rgba(123, 0, 20, 0.08);
+  color: var(--primary-6);
+}
+
+.auth-page--login .auth-panel__footer a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  transition:
+    color 180ms var(--ease-standard),
+    transform 180ms var(--ease-standard),
+    text-shadow 220ms var(--ease-standard);
+}
+
+.auth-page--login .auth-panel__footer a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0.92);
+  transform-origin: left center;
+  transition:
+    transform var(--duration-fast) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+
+.auth-page--login .auth-panel__footer a:hover,
+.auth-page--login .auth-panel__footer a:focus-visible {
+  color: var(--primary-6);
+  transform: translateY(-1px);
+  text-shadow: 0 6px 14px rgba(190, 21, 46, 0.12);
+}
+
+.auth-page--login .auth-panel__footer a:hover::after,
+.auth-page--login .auth-panel__footer a:focus-visible::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .auth-register-transition {

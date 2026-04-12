@@ -84,7 +84,11 @@ export default function Register() {
 	}
 
 	return (
-		<section className="auth-page auth-page--register">
+		<section
+			className={`auth-page auth-page--register ${
+				isPageLoading ? 'auth-page--content-hidden' : 'auth-page--content-visible'
+			}`}
+		>
 			<aside className="auth-showcase auth-showcase--register">
 				<div className="auth-showcase__chip">Create Student Access</div>
 				<h1 className="auth-showcase__title">Start booking your learning commons sessions in minutes.</h1>
@@ -120,7 +124,7 @@ export default function Register() {
 					</label>
 
 					<label className="auth-field">
-						<span>UST Email</span>
+						<span>UST Email Address</span>
 						<input
 							type="email"
 							value={formValues.email}
