@@ -1,29 +1,27 @@
+/* === Mobile-first: full-width modal on small screens === */
 .ui-modal__backdrop {
   position: fixed;
   inset: 0;
   z-index: 2000;
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: 0.5rem;
   background: rgba(20, 10, 10, 0.52);
   backdrop-filter: blur(6px);
   animation: ui-modal-backdrop-in 180ms ease-out;
   will-change: opacity;
 }
 
-.ui-modal__backdrop--closing {
-  animation: ui-modal-backdrop-out 180ms ease-in forwards;
-}
-
 .ui-modal {
-  width: min(100%, 42rem);
-  max-height: min(90vh, 46rem);
+  width: 100%;
+  max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(247, 241, 233, 0.98) 100%);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.26);
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.26), var(--shadow-lg);
   overflow: hidden;
   position: relative;
   z-index: 2001;
@@ -32,50 +30,152 @@
   will-change: opacity, transform;
 }
 
-.ui-modal--closing {
-  animation: ui-modal-dialog-out 180ms ease-in forwards;
-}
-
+/* --- Header: red brand gradient matching platform identity --- */
 .ui-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.1rem;
-  border-bottom: 1px solid var(--border-subtle);
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  background: linear-gradient(135deg, var(--primary-3) 0%, var(--primary-5) 100%);
+  border-bottom: none;
+  flex-shrink: 0;
 }
 
 .ui-modal__title {
   margin: 0;
-  color: var(--text-primary);
-  font-size: 1.15rem;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Close button: centered, white-on-red style --- */
 .ui-modal__close {
-  width: 2.1rem;
-  height: 2.1rem;
-  border: 1px solid var(--border-subtle);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
-  background: white;
-  color: var(--text-secondary);
-  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
 }
 
+.ui-modal__close:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.08);
+}
+
+.ui-modal__close:active {
+  transform: scale(0.93);
+}
+
+/* --- Body: padded scroll area with thin modern scrollbar --- */
 .ui-modal__body {
   padding: 1.1rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Thin scrollbar — Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(190, 21, 46, 0.35) transparent;
+}
+
+/* Thin scrollbar — WebKit/Chromium */
+.ui-modal__body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ui-modal__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ui-modal__body::-webkit-scrollbar-thumb {
+  background: rgba(190, 21, 46, 0.35);
+  border-radius: 2px;
+}
+
+.ui-modal__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(190, 21, 46, 0.58);
+}
+
+/* ≥ 640px — constrained width, larger padding */
+@media (min-width: 640px) {
+  .ui-modal__backdrop {
+    padding: 1rem;
+  }
+
+  .ui-modal {
+    width: min(100%, 42rem);
+    max-height: min(90vh, 46rem);
+    border-radius: var(--radius-xl);
+  }
+
+  .ui-modal__header {
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .ui-modal__title {
+    font-size: 1.15rem;
+  }
+
+  .ui-modal__close {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .ui-modal__body {
+    padding: 1.25rem;
+  }
+}
+
+/* --- Dark theme adjustments --- */
+[data-theme='dark'] .ui-modal {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+  border-color: var(--border-subtle);
+}
+
+[data-theme='dark'] .ui-modal__header {
+  background: linear-gradient(135deg, var(--primary-2) 0%, var(--primary-4) 100%);
+}
+
+[data-theme='dark'] .ui-modal__body {
+  scrollbar-color: rgba(255, 82, 92, 0.4) transparent;
+}
+
+[data-theme='dark'] .ui-modal__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 82, 92, 0.4);
+}
+
+[data-theme='dark'] .ui-modal__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 82, 92, 0.65);
+}
+
+/* --- Animation states --- */
+.ui-modal__backdrop--closing {
+  animation: ui-modal-backdrop-out 180ms ease-in forwards;
+}
+
+.ui-modal--closing {
+  animation: ui-modal-dialog-out 180ms ease-in forwards;
 }
 
 @keyframes ui-modal-backdrop-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes ui-modal-dialog-in {
@@ -83,7 +183,6 @@
     opacity: 0;
     transform: translateY(14px) scale(0.98);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -91,13 +190,8 @@
 }
 
 @keyframes ui-modal-backdrop-out {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
 @keyframes ui-modal-dialog-out {
@@ -105,7 +199,6 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-
   to {
     opacity: 0;
     transform: translateY(14px) scale(0.98);

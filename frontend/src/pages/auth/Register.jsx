@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUsers } from '../../data/services/authService';
 import cicsLogo from '../../assets/CICS-Logo.png';
 import './AuthPages.css';
 
 export default function Register() {
 	const navigate = useNavigate();
-	const [users, setUsers] = useState([]);
-	const [isPageLoading, setIsPageLoading] = useState(true);
 	const [formValues, setFormValues] = useState({
 		fullName: '',
 		email: '',
@@ -16,45 +13,20 @@ export default function Register() {
 		confirmPassword: '',
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isPageLoading, setIsPageLoading] = useState(true);
 	const [feedback, setFeedback] = useState('Create your account to reserve hourly slots in the Learning Commons.');
 
 	useEffect(() => {
-		let active = true;
-
-		async function loadRegisterPage() {
-			try {
-				const [items] = await Promise.all([
-					getUsers(),
-					new Promise((resolve) => setTimeout(resolve, 700)),
-				]);
-
-				if (!active) return;
-
-				setUsers(items);
-			} catch {
-				if (!active) return;
-
-				setFeedback('Unable to load the registration page. Please refresh and try again.');
-			} finally {
-				if (active) {
-					setIsPageLoading(false);
-				}
-			}
-		}
-
-		loadRegisterPage();
-
-		return () => {
-			active = false;
-		};
-	}, []);
-
-	useEffect(() => {
 		const previousTitle = document.title;
-		document.title = 'Create Account - UST CICS Learning Commons';
+		document.title = 'Create Account - UST CICS Learning Common Room';
+
+		const timeoutId = window.setTimeout(() => {
+			setIsPageLoading(false);
+		}, 700);
 
 		return () => {
 			document.title = previousTitle;
+			window.clearTimeout(timeoutId);
 		};
 	}, []);
 
@@ -90,9 +62,10 @@ export default function Register() {
 			}`}
 		>
 			<aside className="auth-showcase auth-showcase--register">
-				<div className="auth-showcase__chip">Create Student Access</div>
-				<h1 className="auth-showcase__title">Start booking your learning commons sessions in minutes.</h1>
-				<p className="auth-showcase__subtitle">
+				<img src="/UST-CICS Logo.png" alt="UST CICS" className="auth-showcase__logo" />
+				<h1 className="auth-showcase__title">CICS Learning Common Room</h1>
+				<p className="auth-showcase__subtitle">University of Santo Tomas</p>
+				<p className="auth-showcase__desc">
 					Register once and get access to scheduling, check-in tracking, and reservation history.
 				</p>
 				<div className="auth-showcase__list-card">
@@ -105,6 +78,12 @@ export default function Register() {
 				</div>
 			</aside>
 
+			<div className="auth-mobile-brand">
+				<img src="/UST-CICS Logo.png" alt="UST CICS" className="auth-mobile-brand__logo" />
+				<h1 className="auth-mobile-brand__title">CICS Learning Common Room</h1>
+				<p className="auth-mobile-brand__subtitle">University of Santo Tomas</p>
+			</div>
+
 			<div className="auth-panel">
 				<div className="auth-panel__header">
 					<h2>Create Account</h2>
@@ -114,58 +93,90 @@ export default function Register() {
 				<form className="auth-form" onSubmit={handleSubmit}>
 					<label className="auth-field">
 						<span>Full Name</span>
-						<input
-							type="text"
-							value={formValues.fullName}
-							onChange={(event) => updateField('fullName', event.target.value)}
-							placeholder="Juan A. Dela Cruz"
-							required
-						/>
+						<div className="auth-field__input-wrap">
+							<svg className="auth-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+								<path d="M10 10a3.5 3.5 0 100-7 3.5 3.5 0 000 7Z" />
+								<path d="M3.5 17a6.5 6.5 0 0113 0" />
+							</svg>
+							<input
+								type="text"
+								value={formValues.fullName}
+								onChange={(event) => updateField('fullName', event.target.value)}
+								placeholder="Juan A. Dela Cruz"
+								required
+							/>
+						</div>
 					</label>
 
 					<label className="auth-field">
 						<span>UST Email Address</span>
-						<input
-							type="email"
-							value={formValues.email}
-							onChange={(event) => updateField('email', event.target.value)}
-							placeholder="yourname@ust.edu.ph"
-							required
-						/>
+						<div className="auth-field__input-wrap">
+							<svg className="auth-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+								<rect x="2" y="4" width="16" height="12" rx="2" />
+								<path d="M2 4l8 6 8-6" />
+							</svg>
+							<input
+								type="email"
+								value={formValues.email}
+								onChange={(event) => updateField('email', event.target.value)}
+								placeholder="yourname@ust.edu.ph"
+								required
+							/>
+						</div>
 					</label>
 
 					<label className="auth-field">
 						<span>Student Number</span>
-						<input
-							type="text"
-							value={formValues.studentId}
-							onChange={(event) => updateField('studentId', event.target.value)}
-							placeholder="2026-123456"
-							required
-						/>
+						<div className="auth-field__input-wrap">
+							<svg className="auth-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+								<rect x="3" y="4" width="14" height="12" rx="2" />
+								<path d="M6.5 8h7" />
+								<path d="M6.5 11h4.5" />
+							</svg>
+							<input
+								type="text"
+								value={formValues.studentId}
+								onChange={(event) => updateField('studentId', event.target.value)}
+								placeholder="2026-123456"
+								required
+							/>
+						</div>
 					</label>
 
 					<div className="auth-form__two-column">
 						<label className="auth-field">
 							<span>Password</span>
-							<input
-								type="password"
-								value={formValues.password}
-								onChange={(event) => updateField('password', event.target.value)}
-								placeholder="Min. 8 chars, Aa1!"
-								required
-							/>
+							<div className="auth-field__input-wrap">
+								<svg className="auth-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+									<rect x="5" y="9" width="10" height="8" rx="2" />
+									<path d="M7 9V6a3 3 0 016 0v3" />
+								</svg>
+								<input
+									type="password"
+									value={formValues.password}
+									onChange={(event) => updateField('password', event.target.value)}
+									placeholder="Min. 4 chars"
+									required
+								/>
+							</div>
 						</label>
 
 						<label className="auth-field">
 							<span>Confirm Password</span>
-							<input
-								type="password"
-								value={formValues.confirmPassword}
-								onChange={(event) => updateField('confirmPassword', event.target.value)}
-								placeholder="Re-enter your password"
-								required
-							/>
+							<div className="auth-field__input-wrap">
+								<svg className="auth-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+									<rect x="5" y="9" width="10" height="8" rx="2" />
+									<path d="M7 9V6a3 3 0 016 0v3" />
+									<path d="M8.25 13l1.1 1.1 2.4-2.4" />
+								</svg>
+								<input
+									type="password"
+									value={formValues.confirmPassword}
+									onChange={(event) => updateField('confirmPassword', event.target.value)}
+									placeholder="Re-enter your password"
+									required
+								/>
+							</div>
 						</label>
 					</div>
 
@@ -175,14 +186,18 @@ export default function Register() {
 				</form>
 
 				<p className="auth-status-message">{feedback}</p>
-				<p className="auth-session-message">Existing mock accounts: {users.length}</p>
 				<p className="auth-panel__footer">
 					Already registered? <Link to="/auth/login">Sign in</Link>
 				</p>
 			</div>
 
 			{isPageLoading ? (
-				<div className="auth-register-transition" role="status" aria-live="polite" aria-label="Loading create account page">
+				<div
+					className="auth-register-transition"
+					role="status"
+					aria-live="polite"
+					aria-label="Loading create account page"
+				>
 					<div className="auth-register-transition__card">
 						<img
 							src={cicsLogo}
