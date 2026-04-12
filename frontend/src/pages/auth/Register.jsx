@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUsers } from '../../data/services/authService';
+import cicsLogo from '../../assets/CICS-Logo.png';
 import './AuthPages.css';
 
 export default function Register() {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState([]);
+	const [isPageLoading, setIsPageLoading] = useState(true);
 	const [formValues, setFormValues] = useState({
 		fullName: '',
 		email: '',
@@ -19,18 +21,40 @@ export default function Register() {
 	useEffect(() => {
 		let active = true;
 
-		async function loadUsers() {
-			const items = await getUsers();
+		async function loadRegisterPage() {
+			try {
+				const [items] = await Promise.all([
+					getUsers(),
+					new Promise((resolve) => setTimeout(resolve, 700)),
+				]);
 
-			if (!active) return;
+				if (!active) return;
 
-			setUsers(items);
+				setUsers(items);
+			} catch {
+				if (!active) return;
+
+				setFeedback('Unable to load the registration page. Please refresh and try again.');
+			} finally {
+				if (active) {
+					setIsPageLoading(false);
+				}
+			}
 		}
 
-		loadUsers();
+		loadRegisterPage();
 
 		return () => {
 			active = false;
+		};
+	}, []);
+
+	useEffect(() => {
+		const previousTitle = document.title;
+		document.title = 'Create Account - UST CICS Learning Commons';
+
+		return () => {
+			document.title = previousTitle;
 		};
 	}, []);
 
@@ -90,28 +114,29 @@ export default function Register() {
 							type="text"
 							value={formValues.fullName}
 							onChange={(event) => updateField('fullName', event.target.value)}
+							placeholder="Juan A. Dela Cruz"
 							required
 						/>
 					</label>
 
 					<label className="auth-field">
-						<span>School Email</span>
+						<span>UST Email</span>
 						<input
 							type="email"
 							value={formValues.email}
 							onChange={(event) => updateField('email', event.target.value)}
-							placeholder="name@ust.edu.ph"
+							placeholder="yourname@ust.edu.ph"
 							required
 						/>
 					</label>
 
 					<label className="auth-field">
-						<span>Student ID</span>
+						<span>Student Number</span>
 						<input
 							type="text"
 							value={formValues.studentId}
 							onChange={(event) => updateField('studentId', event.target.value)}
-							placeholder="2026-00000"
+							placeholder="2026-123456"
 							required
 						/>
 					</label>
@@ -123,6 +148,7 @@ export default function Register() {
 								type="password"
 								value={formValues.password}
 								onChange={(event) => updateField('password', event.target.value)}
+								placeholder="Min. 8 chars, Aa1!"
 								required
 							/>
 						</label>
@@ -133,6 +159,7 @@ export default function Register() {
 								type="password"
 								value={formValues.confirmPassword}
 								onChange={(event) => updateField('confirmPassword', event.target.value)}
+								placeholder="Re-enter your password"
 								required
 							/>
 						</label>
@@ -149,6 +176,21 @@ export default function Register() {
 					Already registered? <Link to="/auth/login">Sign in</Link>
 				</p>
 			</div>
+
+			{isPageLoading ? (
+				<div className="auth-register-transition" role="status" aria-live="polite" aria-label="Loading create account page">
+					<div className="auth-register-transition__card">
+						<img
+							src={cicsLogo}
+							alt="UST CICS logo"
+							className="auth-register-transition__logo"
+						/>
+						<div className="auth-register-transition__loader" aria-hidden="true">
+							<span></span>
+						</div>
+					</div>
+				</div>
+			) : null}
 		</section>
 	);
 }
